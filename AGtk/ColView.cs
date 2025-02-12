@@ -86,6 +86,10 @@ public class ColView : ColumnView {
         store.Append(new Row(values));
     }
 
+    public void Clear() {
+        store.RemoveAll();
+    }
+
     bool is_row_visible(GObject.Object item) {
         if (filter_column is int col) {
             string s = ((Row) item).values[col].ToString()!;
