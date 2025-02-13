@@ -47,7 +47,7 @@ public class ColView : ColumnView {
     int? filter_column = null;
     string filter_text = "";
 
-    public ColView(string[] names) {
+    public ColView(params string[] names) {
         this.names = names;
         
         store = Gio.ListStore.New(Row.GetGType());
@@ -82,7 +82,7 @@ public class ColView : ColumnView {
         }
     }
 
-    public void Add(object[] values) {
+    public void Add(params object[] values) {
         store.Append(new Row(values));
     }
 
