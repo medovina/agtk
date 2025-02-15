@@ -49,11 +49,13 @@ It would be nice if the user could click a column header to sort by that column.
 
 ## Using the library
 
-Perhaps I'll publish a nuget package at some point, but this is an early work in progress so I haven't done that yet.  In the meantime, you can clone this repository to your machine, then use the `dotnet add reference` command to add a reference to agtk.csproj in your project:
+AGtk is available as a nuget package:
 
 ```
-$ dotnet add reference /path/to/agtk.csproj
+$ dotnet add package AGtk
 ```
+
+The current version number is 0.1.1.
 
 ## API reference
 All members listed below are public.
