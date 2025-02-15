@@ -4,11 +4,11 @@ using Gtk;
 namespace AGtk;
 
 [Subclass<GObject.Object>]
-partial class Row {
-    public object[] values;
+public partial class Row {
+    public readonly object[] Values;
 
     public Row(object[] values) : this() {
-        this.values = values;
+        this.Values = values;
     }
 }
 
@@ -33,7 +33,21 @@ class LabelFactory : SignalListItemFactory {
         ListItem listItem = (ListItem) args.Object;
         Label label = (Label) listItem.Child!;
         Row row = (Row) listItem.Item!;
-        label.SetText(row.values[index].ToString()!);
+        label.SetText(row.Values[index].ToString()!);
+    }
+}
+
+public delegate void SelectionChanged(uint rowIndex);
+
+public class RowList(Gio.ListStore store) {
+    public Row this[uint i] {
+        get {
+            object? o = store.GetObject(i);
+            if (o == null)
+                throw new Exception("out of bounds");
+            else
+                return (Row) o;
+        }
     }
 }
 
@@ -43,9 +57,12 @@ public class ColView : ColumnView {
     Gio.ListStore store;
     FilterListModel filter_model;
     CustomFilter filter;
+    SingleSelection selection_model;
 
     int? filter_column = null;
     string filter_text = "";
+
+    public event SelectionChanged? OnSelectionChanged;
 
     public ColView(params string[] names) {
         this.names = names;
@@ -56,20 +73,21 @@ public class ColView : ColumnView {
 
         filter = CustomFilter.New(is_row_visible); 
         filter_model = FilterListModel.New(store, filter);
-        Model = SingleSelection.New(filter_model);
+        Model = selection_model = SingleSelection.New(filter_model);
+
+        Signal<SingleSelection> signal = new("selection-changed", "selection-changed");
+        signal.Connect(selection_model, on_selection_changed);
     }
 
-    public string? FilterColumn {
-        get => filter_column == null ? null : names[(int) filter_column];
+    public uint SelectedIndex => selection_model.Selected;
+
+    public RowList Rows => new RowList(store);
+
+    public int? FilterColumn {
+        get => filter_column;
 
         set {
-            if (value == null)
-                filter_column = null;
-            else {
-                filter_column = Array.IndexOf(names, value);
-                if (filter_column < 0)
-                    throw new Exception("column not found");
-            }
+            filter_column = value;
             filter.Changed(FilterChange.Different);
         }
     }
@@ -92,8 +110,13 @@ public class ColView : ColumnView {
 
     bool is_row_visible(GObject.Object item) {
         if (filter_column is int col) {
-            string s = ((Row) item).values[col].ToString()!;
+            string s = ((Row) item).Values[col].ToString()!;
             return s.Contains(FilterText, StringComparison.OrdinalIgnoreCase);
         } else return true;
+    }
+
+    void on_selection_changed(SingleSelection sender, EventArgs args) {
+        if (OnSelectionChanged != null)
+            OnSelectionChanged(SelectedIndex);
     }
 }
