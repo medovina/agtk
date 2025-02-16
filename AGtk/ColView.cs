@@ -70,6 +70,7 @@ public class ColView : ColumnView {
         store = Gio.ListStore.New(Row.GetGType());
         for (int i = 0 ; i < names.Length ; ++i) {
             ColumnViewColumn col = ColumnViewColumn.New(names[i], new LabelFactory(i));
+            col.Expand = true;
             int j = i;  // prevent lambda from capturing i, which will change
             CustomSorter sorter = CustomSorter.New((a, b) => compare(j, a, b));
             col.Sorter = sorter;
