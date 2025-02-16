@@ -68,15 +68,31 @@ public class ColView : ColumnView {
         this.names = names;
         
         store = Gio.ListStore.New(Row.GetGType());
-        for (int i = 0 ; i < names.Length ; ++i)
-            AppendColumn(ColumnViewColumn.New(names[i], new LabelFactory(i)));
+        for (int i = 0 ; i < names.Length ; ++i) {
+            ColumnViewColumn col = ColumnViewColumn.New(names[i], new LabelFactory(i));
+            int j = i;  // prevent lambda from capturing i, which will change
+            CustomSorter sorter = CustomSorter.New((a, b) => compare(j, a, b));
+            col.Sorter = sorter;
+            AppendColumn(col);
+        }
 
         filter = CustomFilter.New(is_row_visible); 
         filter_model = FilterListModel.New(store, filter);
-        Model = selection_model = SingleSelection.New(filter_model);
+
+        Sorter view_sorter = Sorter!;
+        SortListModel sort_model = SortListModel.New(filter_model, view_sorter);
+        Model = selection_model = SingleSelection.New(sort_model);
 
         Signal<SingleSelection> signal = new("selection-changed", "selection-changed");
         signal.Connect(selection_model, on_selection_changed);
+    }
+
+    int compare(int column, nint a, nint b) {
+        Row rowA = (Row) GObject.Internal.InstanceWrapper.WrapHandle<GObject.Object>(a, false);
+        Row rowB = (Row) GObject.Internal.InstanceWrapper.WrapHandle<GObject.Object>(b, false);
+        object objA = rowA.Values[column];
+        object objB = rowB.Values[column];
+        return ((IComparable) objA).CompareTo(objB);
     }
 
     public uint SelectedIndex => selection_model.Selected;
@@ -100,7 +116,7 @@ public class ColView : ColumnView {
         }
     }
 
-    public void Add(params object[] values) {
+    public void Add(params IComparable[] values) {
         store.Append(new Row(values));
     }
 

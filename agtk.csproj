@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 
     <PackageId>AGtk</PackageId>
-    <Version>0.1.1</Version>
+    <Version>0.2.0</Version>
     <Authors>Adam Dingle</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

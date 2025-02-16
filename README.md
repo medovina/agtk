@@ -21,6 +21,9 @@ That will produce a column view that looks like this:
 
 ![column view](col_view.png)
 
+
+You can sort on any column by clicking on the column's header.  AGtk.ColView compares objects by casting them to [IComparable](https://learn.microsoft.com/en-us/dotnet/api/system.icomparable?view=net-8.0).  For this reason, currently all objects added to an AGtk.ColView must implement the IComparable interface.  (This is not too restrictive, since many useful types such as int and string do implement IComparable.)
+
 ### Adding filtering
 
 AGtk.ColView supports dynamic filtering.  Typically you'll use this with a search box: as the user types in the box, rows will be filtered.  Here's how to do this in code:
@@ -43,10 +46,6 @@ void on_search_changed(SearchEntry sender, EventArgs args) {
 
 My page [Introduction to GTK 4 in C#](https://ksvi.mff.cuni.cz/~dingle/2024-5/prog_2/gtk4_introduction.html) contains a [complete example]( https://ksvi.mff.cuni.cz/~dingle/2024-5/prog_2/gtk4_introduction.html#Column%20views|outline) of a program using AGtk.ColView.
 
-### Sorting
-
-It would be nice if the user could click a column header to sort by that column.  Unfortunately that's not yet possible due to [limitations in the Gir.Core binding for GTK 4](https://github.com/gircore/gir.core/issues/1180).  I hope I'll be able to work with the Gir.Core developers to improve this situation before long.
-
 ## Using the library
 
 AGtk is available as a nuget package:
@@ -55,7 +54,7 @@ AGtk is available as a nuget package:
 $ dotnet add package AGtk
 ```
 
-The current version number is 0.1.1.
+The current version number is 0.2.0.
 
 ## API reference
 All members listed below are public.
@@ -65,12 +64,12 @@ All members listed below are public.
 <dl>
 <dt><code>ColView(params string[] names)</code></dt>
 <dd>Create a ColView with the given column names.</dd>
-<dt><code>void Add(params object[] values)</code></dt>
+<dt><code>void Add(params IComparable[] values)</code></dt>
 <dd>Append a row of values to the view.</dd>
 <dt><code>void Clear()</code></dt>
 <dd>Remove all rows from the view.</dd>
 <dt><code>int? FilterColumn {get; set; }</code></dt>
-<dd>The index of the column used for filtering.</dd>
+<dd>The 0-based index of the column used for filtering.</dd>
 <dt><code>string FilterText {get; set; }</code></dt>
 <dd>The text to use for filtering.  Only rows whose filter column contains this text will be shown.  If the value is "", all rows will be displayed.</dd>
 <dt><code>RowList Rows {get;}</code></dt>
