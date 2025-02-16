@@ -80,7 +80,7 @@ AGtk is available as a nuget package:
 $ dotnet add package AGtk
 ```
 
-The current version number is 0.3.0.
+The current version number is 0.3.1.
 
 ## API reference
 All members listed below are public.
