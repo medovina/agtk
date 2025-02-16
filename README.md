@@ -1,6 +1,8 @@
 # AGtk
 
-AGtk is a library of helper classes for GTK 4 in C#.  Well, actually at the moment there's only one helper class: AGtk.ColView.  But perhaps I'll add more in the future.
+AGtk is a library of helper classes for GTK 4 in C#.
+
+Well, actually at the moment there's only one helper class: AGtk.ColView, plus some convenient extension methods for adding actions to a GtkWindow or GtkApplication.  But perhaps I'll add more classes in the future.
 
 ## AGtk.ColView
 
@@ -46,6 +48,30 @@ void on_search_changed(SearchEntry sender, EventArgs args) {
 
 My page [Introduction to GTK 4 in C#](https://ksvi.mff.cuni.cz/~dingle/2024-5/prog_2/gtk4_introduction.html) contains a [complete example]( https://ksvi.mff.cuni.cz/~dingle/2024-5/prog_2/gtk4_introduction.html#Column%20views|outline) of a program using AGtk.ColView.
 
+## Extension methods for actions
+
+AGtk includes a couple of convenient extension methods for adding actions to a GtkWindow or GtkApplication.  For example, in a GtkWindow subclass you can call
+
+```
+this.AddAction("open", on_open);
+```
+
+This call will add an action "open" that will call on_open() when activated.
+
+```
+this.AddToggleAction("show_statusbar", true, on_show_statusbar);
+```
+
+This call will add a toggle action called "show_statusbar".  The corresponding menu item will display a checkbox, which will be initially checked since the second argument is 'true'.  on_show_statusbar() will be called when the user toggles the checkbox, and will receive a boolean indicating the current toggle state.
+
+To make these extension methods available, you must use the AGtk namespace:
+
+```
+using AGtk;
+```
+
+My page [Introduction to GTK 4 in C#](https://ksvi.mff.cuni.cz/~dingle/2024-5/prog_2/gtk4_introduction.html) contains a [complete example](https://ksvi.mff.cuni.cz/~dingle/2024-5/prog_2/gtk4_introduction.html#Menus|outline) of a program using these extension methods.
+
 ## Using the library
 
 AGtk is available as a nuget package:
@@ -54,7 +80,7 @@ AGtk is available as a nuget package:
 $ dotnet add package AGtk
 ```
 
-The current version number is 0.2.0.
+The current version number is 0.3.0.
 
 ## API reference
 All members listed below are public.
@@ -100,7 +126,20 @@ A list of rows.
 
 ### SelectedChanged
 
+A delegate type for a selection change event.
+
 <dl>
 <dt><code>delegate void SelectionChanged(uint rowIndex)</code></dt>
-<dd>A delegate type for a selection change event.  rowIndex will contain the currently selected row.</dd>
+<dd>rowIndex will contain the currently selected row.</dd>
+</dl>
+
+### Helpers
+
+Extension methods for adding actions.
+
+<dl>
+<dt><code>static SimpleAction AddAction(this Gio.ActionMap map, string name, Action f)</code></dt>
+<dd>Add a named action with a function to be called on activation.</dd>
+<dt><code>static SimpleAction AddToggleAction(this Gio.ActionMap map, string name, bool initial, Action&lt;bool&gt;? f)</code>
+<dd>Add a named toggle action.  The corresponding menu item will display a checkbox, which will be initially checked if <code>initial</code> is true.  If <code>f</code> is non-null, it will be called when the user toggles the checkbox, and will receive a boolean value indicating the current toggle state.</dd>
 </dl>
