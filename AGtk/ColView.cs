@@ -52,7 +52,7 @@ public class RowList(Gio.ListStore store) {
 }
 
 public class ColView : ColumnView {
-    string[] names;
+    string?[] names;
 
     Gio.ListStore store;
     FilterListModel filter_model;
@@ -64,18 +64,19 @@ public class ColView : ColumnView {
 
     public event SelectionChanged? OnSelectionChanged;
 
-    public ColView(params string[] names) {
+    public ColView(params string?[] names) {
         this.names = names;
         
         store = Gio.ListStore.New(Row.GetGType());
-        for (int i = 0 ; i < names.Length ; ++i) {
-            ColumnViewColumn col = ColumnViewColumn.New(names[i], new LabelFactory(i));
-            col.Expand = true;
-            int j = i;  // prevent lambda from capturing i, which will change
-            CustomSorter sorter = CustomSorter.New((a, b) => compare(j, a, b));
-            col.Sorter = sorter;
-            AppendColumn(col);
-        }
+        for (int i = 0 ; i < names.Length ; ++i)
+            if (names[i] != null) {
+                ColumnViewColumn col = ColumnViewColumn.New(names[i], new LabelFactory(i));
+                col.Expand = true;
+                int j = i;  // prevent lambda from capturing i, which will change
+                CustomSorter sorter = CustomSorter.New((a, b) => compare(j, a, b));
+                col.Sorter = sorter;
+                AppendColumn(col);
+            }
 
         filter = CustomFilter.New(is_row_visible); 
         filter_model = FilterListModel.New(store, filter);
@@ -117,7 +118,14 @@ public class ColView : ColumnView {
         }
     }
 
-    public void Add(params IComparable[] values) {
+    public void Add(params object[] values) {
+        if (values.Length != names.Length)
+            throw new Exception("number of values doesn't match number of columns");
+            
+        for (int i = 0; i < values.Length; ++i)
+            if (names[i] != null && values[i] is not IComparable)
+                throw new Exception("value in visible column must be comparable");
+
         store.Append(new Row(values));
     }
 

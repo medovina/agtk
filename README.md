@@ -24,7 +24,7 @@ That will produce a column view that looks like this:
 ![column view](col_view.png)
 
 
-You can sort on any column by clicking on the column's header.  AGtk.ColView compares objects by casting them to [IComparable](https://learn.microsoft.com/en-us/dotnet/api/system.icomparable?view=net-8.0).  For this reason, currently all objects added to an AGtk.ColView must implement the IComparable interface.  (This is not too restrictive, since many useful types such as int and string do implement IComparable.)
+You can sort on any column by clicking on the column's header.  AGtk.ColView compares objects by casting them to [IComparable](https://learn.microsoft.com/en-us/dotnet/api/system.icomparable?view=net-8.0).  For this reason, currently all objects added to a visible column must implement the IComparable interface.  (This is not too restrictive, since many useful types such as int and string do implement IComparable.)
 
 ### Adding filtering
 
@@ -80,7 +80,7 @@ AGtk is available as a nuget package:
 $ dotnet add package AGtk
 ```
 
-The current version number is 0.3.1.
+The current version number is 0.3.2.
 
 ## API reference
 All members listed below are public.
@@ -88,10 +88,10 @@ All members listed below are public.
 ### ColView
 
 <dl>
-<dt><code>ColView(params string[] names)</code></dt>
-<dd>Create a ColView with the given column names.</dd>
-<dt><code>void Add(params IComparable[] values)</code></dt>
-<dd>Append a row of values to the view.</dd>
+<dt><code>ColView(params string?[] names)</code></dt>
+<dd>Create a ColView with the given column names.  A column name that is null represents an invisible column.  (You can use such a column to store data that should not be displayed, but can still be retrieved along with the visible values in a row.)</dd>
+<dt><code>void Add(params object[] values)</code></dt>
+<dd>Append a row of values to the view.  Any value added to a visible column must be comparable, i.e. be an instance of IComparable.  </dd>
 <dt><code>void Clear()</code></dt>
 <dd>Remove all rows from the view.</dd>
 <dt><code>int? FilterColumn {get; set; }</code></dt>
