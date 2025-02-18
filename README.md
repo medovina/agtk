@@ -2,7 +2,7 @@
 
 AGtk is a library of helper classes for GTK 4 in C#.
 
-Well, actually at the moment there's only one helper class: AGtk.ColView, plus some convenient extension methods for adding actions to a GtkWindow or GtkApplication.  But perhaps I'll add more classes in the future.
+Well, actually at the moment there's only one helper class: AGtk.ColView, plus some convenient extension methods for working with actions.  But perhaps I'll add more classes in the future.
 
 ## AGtk.ColView
 
@@ -24,7 +24,9 @@ That will produce a column view that looks like this:
 ![column view](col_view.png)
 
 
-You can sort on any column by clicking on the column's header.  AGtk.ColView compares objects by casting them to [IComparable](https://learn.microsoft.com/en-us/dotnet/api/system.icomparable?view=net-8.0).  For this reason, currently all objects added to a visible column must implement the IComparable interface.  (This is not too restrictive, since many useful types such as int and string do implement IComparable.)
+You can sort on any column by clicking on the column's header.  AGtk.ColView compares objects by casting them to [IComparable](https://learn.microsoft.com/en-us/dotnet/api/system.icomparable?view=net-8.0).  For this reason, currently all objects added to a visible column must implement the IComparable interface.  This is not too restrictive, since many useful types such as int and string do implement IComparable.
+
+If a column name is null, the column is invisible and you can add any object you like to it.  This can be useful for storing data that you want to retrieve along with the selected column.
 
 ### Adding filtering
 
@@ -80,7 +82,7 @@ AGtk is available as a nuget package:
 $ dotnet add package AGtk
 ```
 
-The current version number is 0.3.2.
+The current version number is 0.3.3.
 
 ## API reference
 All members listed below are public.
@@ -89,7 +91,7 @@ All members listed below are public.
 
 <dl>
 <dt><code>ColView(params string?[] names)</code></dt>
-<dd>Create a ColView with the given column names.  A column name that is null represents an invisible column.  (You can use such a column to store data that should not be displayed, but can still be retrieved along with the visible values in a row.)</dd>
+<dd>Create a ColView with the given column names.  A column name that is null represents an invisible column.</dd>
 <dt><code>void Add(params object[] values)</code></dt>
 <dd>Append a row of values to the view.  Any value added to a visible column must be comparable, i.e. be an instance of IComparable.  </dd>
 <dt><code>void Clear()</code></dt>
@@ -135,11 +137,15 @@ A delegate type for a selection change event.
 
 ### Helpers
 
-Extension methods for adding actions.
+Extension methods for actions.
 
 <dl>
 <dt><code>static SimpleAction AddAction(this Gio.ActionMap map, string name, Action f)</code></dt>
 <dd>Add a named action with a function to be called on activation.</dd>
 <dt><code>static SimpleAction AddToggleAction(this Gio.ActionMap map, string name, bool initial, Action&lt;bool&gt;? f)</code>
 <dd>Add a named toggle action.  The corresponding menu item will display a checkbox, which will be initially checked if <code>initial</code> is true.  If <code>f</code> is non-null, it will be called when the user toggles the checkbox, and will receive a boolean value indicating the current toggle state.</dd>
+<dt><code>static bool GetBoolean(this SimpleAction action)</code></dt>
+<dd>Retrieve the boolean state of a toggle action.</dd>
+<dt><code>static void SetBoolean(this SimpleAction action, bool b)</code></dt>
+<dd>Set the boolean state of a toggle action.</dd>
 </dl>

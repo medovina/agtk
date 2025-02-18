@@ -4,6 +4,13 @@ using SimpleAction = Gio.SimpleAction;
 namespace AGtk;
 
 public static class Helpers {
+    public static bool GetBoolean(this SimpleAction action) =>
+        action.GetState()!.GetBoolean();
+
+    public static void SetBoolean(this SimpleAction action, bool b) {
+        action.SetState(Variant.NewBoolean(b));
+    }
+
     // helper method for adding actions
     public static SimpleAction AddAction(this Gio.ActionMap map, string name, Action f) {
         SimpleAction a = SimpleAction.New(name, null);
