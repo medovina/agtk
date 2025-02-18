@@ -96,16 +96,31 @@ All members listed below are public.
 <dd>Append a row of values to the view.  Any value added to a visible column must be comparable, i.e. be an instance of IComparable.  </dd>
 <dt><code>void Clear()</code></dt>
 <dd>Remove all rows from the view.</dd>
+<dt><code>void DeleteRow(uint index)</code></dt>
+<dd>Delete a row by index.</dd>
 <dt><code>int? FilterColumn {get; set; }</code></dt>
 <dd>The 0-based index of the column used for filtering.</dd>
 <dt><code>string FilterText {get; set; }</code></dt>
 <dd>The text to use for filtering.  Only rows whose filter column contains this text will be shown.  If the value is "", all rows will be displayed.</dd>
+<dt><code>event RightClick? OnRightClick</code></dt>
+<dd>An event that fires when the user right clicks the mouse on a row.</dd>
+<dt><code>uint RowCount { get; }</code></dt>
+<dd>The number of rows in this ColView.</dd>
 <dt><code>RowList Rows {get;}</code></dt>
 <dd>A list of rows in this ColView.</dd>
-<dt><code>uint SelectedIndex {get;}</code></dt>
+<dt><code>uint SelectedIndex {get; set;}</code></dt>
 <dd>The index of the row that is currently selected.</dd>
 <dt><code>event SelectionChanged? OnSelectionChanged</code></dt>
 <dd>An event that fires whenever the selection changes.</dd>
+</dl>
+
+### RightClick
+
+A delegate type for a right mouse click event.
+
+<dl>
+<dt><code>delegate void RightClick(int x, int y, uint rowIndex)</code></dt>
+<dd>(x, y) is the position where the user clicked.  rowIndex is the index of the row below the mouse click.</dd>
 </dl>
 
 ### Row
@@ -113,8 +128,8 @@ All members listed below are public.
 A row in the column view.
 
 <dl>
-<dt><code>object[] Values { get; }</code></dt>
-<dd>An array of values in the row.</dd>
+<dt><code>public ValueList Values { get; }</code></dt>
+<dd>An list of values in the row.</dd>
 </dl>
 
 ### RowList
@@ -132,7 +147,16 @@ A delegate type for a selection change event.
 
 <dl>
 <dt><code>delegate void SelectionChanged(uint rowIndex)</code></dt>
-<dd>rowIndex will contain the currently selected row.</dd>
+<dd>rowIndex is the index of the currently selected row.</dd>
+</dl>
+
+### ValueList
+
+A list of values in a row.
+
+<dl>
+<dt><code>object this[int col] { get; set; }</code></dt>
+<dd>An indexer to get or set a value.</dd>
 </dl>
 
 ### Helpers
