@@ -3,30 +3,41 @@ using Gtk;
 
 namespace AGtk;
 
+public class ValueList(Row row) {
+    public object this[int col] {
+        get => row.get_value(col);
+        set => row.set_value(col, value);
+    }
+}
+
 [Subclass<GObject.Object>]
 public partial class Row {
     ColView? col_view;      // optional to suppress compiler warning
-    public readonly object[] Values = [];
+    object[] values = [];
     Dictionary<int, Label> labels = [];
 
     public Row(ColView col_view, object[] values) : this() {
         this.col_view = col_view;
-        this.Values = values;
+        this.values = values;
     }
 
     public void add_label(int column, Label label) {
         labels[column] = label;
-        label.SetText(Values[column].ToString()!);
+        label.SetText(values[column].ToString()!);
     }
 
     public bool contains_label(Label label) => labels.ContainsValue(label);
 
-    public void SetValue(int col, object o) {
-        if (col < 0 || col >= Values.Length)
+    public ValueList Values => new(this);
+
+    public object get_value(int col) => values[col];
+
+    public void set_value(int col, object o) {
+        if (col < 0 || col >= values.Length)
             throw new Exception("index out of bounds");
 
         col_view!.validate(col, o);
-        Values[col] = o;
+        values[col] = o;
         labels[col].SetText(o.ToString()!);
     }
 }
