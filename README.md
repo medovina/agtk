@@ -2,7 +2,7 @@
 
 AGtk is a library of helper classes for GTK 4 in C#.
 
-Well, actually at the moment there's only one helper class: AGtk.ColView, plus some convenient extension methods for working with actions.  But perhaps I'll add more classes in the future.
+Well, actually at the moment there's only one helper class: AGtk.ColView, plus some useful methods for working with actions and resources.  But perhaps I'll add more classes in the future.
 
 ## AGtk.ColView
 
@@ -82,7 +82,7 @@ AGtk is available as a nuget package:
 $ dotnet add package AGtk
 ```
 
-The current version number is 0.4.1.
+The current version number is 0.5.0.
 
 ## API reference
 All members listed below are public.
@@ -114,6 +114,15 @@ All members listed below are public.
 <dd>An event that fires whenever the selection changes.</dd>
 </dl>
 
+### Resources
+
+A static class with useful methods for working with resources in a .NET assembly.  (These are not the same thing as GLib resources, which are not so convenient to use in C#.)
+
+<dl>
+<dt><code>static Gdk.Texture? GetTexture(string name)</code></dt>
+<dd>Retrieve a Gdk.Texture from a named resource in the application's assembly.  Returns null if the resource is not found.</dd>
+</dl>
+
 ### RightClick
 
 A delegate type for a right mouse click event.
@@ -125,7 +134,7 @@ A delegate type for a right mouse click event.
 
 ### Row
 
-A row in the column view.
+A row in a ColView.
 
 <dl>
 <dt><code>public ValueList Values { get; }</code></dt>
@@ -164,12 +173,12 @@ A list of values in a row.
 Extension methods for actions.
 
 <dl>
-<dt><code>static SimpleAction AddAction(this Gio.ActionMap map, string name, Action f)</code></dt>
+<dt><code>static Gio.SimpleAction AddAction(this Gio.ActionMap map, string name, Action f)</code></dt>
 <dd>Add a named action with a function to be called on activation.</dd>
-<dt><code>static SimpleAction AddToggleAction(this Gio.ActionMap map, string name, bool initial, Action&lt;bool&gt;? f)</code>
+<dt><code>static Gio.SimpleAction AddToggleAction(this Gio.ActionMap map, string name, bool initial, Action&lt;bool&gt;? f)</code>
 <dd>Add a named toggle action.  The corresponding menu item will display a checkbox, which will be initially checked if <code>initial</code> is true.  If <code>f</code> is non-null, it will be called when the user toggles the checkbox, and will receive a boolean value indicating the current toggle state.</dd>
-<dt><code>static bool GetToggled(this SimpleAction action)</code></dt>
+<dt><code>static bool GetToggled(this Gio.SimpleAction action)</code></dt>
 <dd>Retrieve the boolean state of a toggle action.</dd>
-<dt><code>static void SetToggled(this SimpleAction action, bool b)</code></dt>
+<dt><code>static void SetToggled(this Gio.SimpleAction action, bool b)</code></dt>
 <dd>Set the boolean state of a toggle action.</dd>
 </dl>
