@@ -4,10 +4,10 @@ using SimpleAction = Gio.SimpleAction;
 namespace AGtk;
 
 public static class Helpers {
-    public static bool GetBoolean(this SimpleAction action) =>
+    public static bool GetToggled(this SimpleAction action) =>
         action.GetState()!.GetBoolean();
 
-    public static void SetBoolean(this SimpleAction action, bool b) {
+    public static void SetToggled(this SimpleAction action, bool b) {
         action.SetState(Variant.NewBoolean(b));
     }
 

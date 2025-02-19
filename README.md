@@ -82,7 +82,7 @@ AGtk is available as a nuget package:
 $ dotnet add package AGtk
 ```
 
-The current version number is 0.3.3.
+The current version number is 0.4.1.
 
 ## API reference
 All members listed below are public.
@@ -168,8 +168,8 @@ Extension methods for actions.
 <dd>Add a named action with a function to be called on activation.</dd>
 <dt><code>static SimpleAction AddToggleAction(this Gio.ActionMap map, string name, bool initial, Action&lt;bool&gt;? f)</code>
 <dd>Add a named toggle action.  The corresponding menu item will display a checkbox, which will be initially checked if <code>initial</code> is true.  If <code>f</code> is non-null, it will be called when the user toggles the checkbox, and will receive a boolean value indicating the current toggle state.</dd>
-<dt><code>static bool GetBoolean(this SimpleAction action)</code></dt>
+<dt><code>static bool GetToggled(this SimpleAction action)</code></dt>
 <dd>Retrieve the boolean state of a toggle action.</dd>
-<dt><code>static void SetBoolean(this SimpleAction action, bool b)</code></dt>
+<dt><code>static void SetToggled(this SimpleAction action, bool b)</code></dt>
 <dd>Set the boolean state of a toggle action.</dd>
 </dl>
